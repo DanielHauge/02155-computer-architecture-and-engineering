@@ -1,1 +1,11 @@
 \section*{A1.7}
+\subsection*{a.}
+If RISC-V only had 2 argument registers and one result register, I would store the arguments in memory and pass the address of the arguments rather than the actual values.
+To return the results, again the results could be stored in memory and address to the results would be given instead of actual values. 
+This way composite structures like imaginary numbers, but also other structures that contain multiple values like strings can be used.
+Both techniques are fundamental when looking at procedure call patterns: \textbf{Call By Reference} and \textbf{Call By Value} that is used in high level programming languages.
+
+\subsection*{b.}
+No registers are saved across a procedure call without additional instructions.
+Only registers that is put in the stack or stored elsewhere in memory with instructions will be saved.
+It is convention to save and restore return address and used temporaries to x8-x9 and x18-x27 registers from the stack.

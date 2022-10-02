@@ -1,1 +1,45 @@
 \section*{A1.5}
+
+\begin{figure}[H]
+    \centering{\caption{Complex multiplication program}\begin{minted}[linenos,frame=single]{nasm}
+        . data
+aa :    . word a # Re part of z
+bb :    . word b # Im part of z
+cc :    . word c # Re part of w
+dd :    . word d # Im part of w
+        
+        . text
+        . globl main
+main :
+    lw a0, aa
+    lw a1, bb
+    lw a2, cc
+    lw a3, dd
+    jal ra, complexMul # Multiply z and w
+    nop
+    j end # Jump to end of program
+    nop
+
+complexMul:
+    MUL t0, a0, a2
+    MUL t1, a1, a3
+    MUL t2, a0, a3
+    MUL t3, a1, a2
+    SUB a0, t0, T1
+    ADD a1, t2, t3
+    jalr x0, 0(ra)
+
+end:
+    nop
+    \end{minted}
+    }
+\end{figure}
+
+\subsection*{a.}
+The procedure \textit{complexMul} is a leaf procedure, as it does not call any other procedures.
+\subsection*{b.}
+The stack was not used, as complex multiplication was achievable with reasonable convinience without the need to retain local variables that a non-leaf procedure needs.
+For example, no need to store return address or other temporary values that will be needed after secondary procedure call returns.
+
+\subsection*{c.}
+4 MUL instructions contribute 8 cycles, sub, add and jalr contribute 3 cycles, which totals 11 cycles.

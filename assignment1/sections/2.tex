@@ -1,1 +1,41 @@
 \section*{A1.2}
+
+\begin{figure}[H]
+    \centering{\caption{Vector reader program}\begin{minted}[linenos,frame=single]{nasm}
+ADDI t0, x0, 0x10000    // Using t0 as read address for number in vector
+ADD t1, x0, x0          // Using t1 as index i starting at 0
+ADDI t2, x0, 100        // Using t2 for stop condition
+ADDI a0, x0, 0x8000     // Init smalest number as largest value  32767
+ADDI a1, x0, 0x7FFF     // Init largest number as smalest value -32768
+
+LOOP:
+BEG t1, t2, END         // End when i reach 100, meaning all numbers are read
+LW t3, 0(t0)            // Load number from vector
+
+BGE t3, a1, BIGGER      // Branch if number is largest so far
+MaybeSmaller:       
+BLT t3, a0, SMALLER     // Branch if number is smalest so far
+BNE x0, x0, CONTINUE   
+
+BIGGER:                 
+ADDI a1, x0, t3         // Set largest number seen so far
+BNE x0, x0, MaybeSmaller
+
+SMALLER: 
+ADDI a0, x0, t3         // Set smalest number seen so far
+
+CONTINUE:
+ADD t1, t1, 1           // Increment i by one (i++)
+ADDI t0, t0, 4          // Increment address to next number (4 bytes)
+BNE x0, x0, LOOP        // Always branch to start of loop.
+
+END:
+NOP
+    \end{minted}
+    }
+\end{figure}
+
+I considered the case where the hundred numbers is always incrementing when reading the numbers sequentialy.
+To accomodate for this, going back with "MaybeSmaller" is used to also check if number is smaller than what has been observed.
+
+\newpage

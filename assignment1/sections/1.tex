@@ -1,1 +1,28 @@
 \section*{A1.1}
+
+\begin{figure}[H]
+\centering{\caption{Problem a.}\begin{minted}[linenos,frame=single]{nasm}
+ADDI t0, x0, 8      // Sets temporary register to 8
+REM t0, x4, t0      // Uses signed remainder ops similar to modulus.
+BNE x0, t0, skip    // If x4 mod 8 is not 0, then x4 is not a multiple of 8.
+ADD x1, x0, x0      // Set x1 to 0 when x4 mod 8 was actully 0.
+skip:
+NOP
+\end{minted}
+}
+\end{figure}
+
+\begin{figure}[H]
+\centering{\caption{Problem b. Bit mask way (Personal preference)}\begin{minted}[linenos,frame=single]{nasm}
+ANDI x1, x5, 31      // Applies an immediate bit mask on x5 stored in x1
+\end{minted}
+}
+\end{figure}
+
+\begin{figure}[H]
+    \centering{\caption{Problem b. Remainder way}\begin{minted}[linenos,frame=single]{nasm}
+ADDI t0, x0, 32     // Sets temporary register to 32 for REM.
+REM x1, x4, t0      // Uses signed remainder ops similar to modulus.
+    \end{minted}
+    }
+\end{figure}

@@ -1,1 +1,46 @@
 \section*{A1.6}
+
+\begin{figure}[H]
+    \centering{\caption{Alternative Ccmplex multiplication program}\begin{minted}[linenos,frame=single]{nasm}
+        . data
+aa :    . word a # Re part of z
+bb :    . word b # Im part of z
+cc :    . word c # Re part of w
+dd :    . word d # Im part of w
+        
+        . text
+        . globl main
+main :
+    lw a0, aa
+    lw a1, bb
+    lw a2, cc
+    lw a3, dd
+    jal ra, altComplexMul # Multiply z and w
+    nop
+    j end # Jump to end of program
+    nop
+
+altComplexMul:
+    ADD t0, a0, a1
+    MUL t0, t0, a2
+    SUB t1, a3, a2
+    MUL t1, t1, a0
+    ADD t2, a2, a3
+    MUL t2, t2, a1 
+    SUB a0, t0, t2
+    ADD a1, t0, t1
+    jalr x0, 0(ra)
+
+end:
+    nop
+    \end{minted}
+    }
+\end{figure}
+
+\subsection*{a.}
+\textit{altComplexMul} is a leaf procedure as it does not call another procedure.
+\subsection*{b.}
+The stack is not used as there was no need to save return address, temporaries or any values from registers that might be overwritten in a nested procedure call.
+
+\subsection*{c.}
+3 MUL instructions contribute 6 cycles, 3 ADD instructions contribute 3 cycles, 2 SUB instructions contribute 2 cycles and jalr contribute one cycle, totaling 12 cycles
