@@ -21,4 +21,6 @@
 *.log
 *.out
 *.synctex.gz
+*.pygtex
+*.pygstyle
 
