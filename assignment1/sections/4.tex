@@ -1,16 +1,44 @@
 \section*{A1.4}
+\textit{Disclaimer: This exercise was quite open for interpretation. The following assumptions are made}
+\begin{itemize}
+    \item \textit{... contains operations to facilitate calee save strategy}
+    \item \textit{... contains no operations that alter registers besides those used to fulfill calee save strategy}
+    \item \textit{... contains operations that always save and restore saved registers regardless of usage}
+    \item \textit{There is no saved argument, and thus not pushed to stack at any point}
+    \item \textit{The PC location is instruction addresess}
+    \item \textit{Unused stack space has been zeroed}
+    \item \textit{The first ... contains no operations that push values to the stack and at that point the stack is empty at the assumed initialization.}
+\end{itemize}
 
-x20 18
-x22 16
-x23 4
-x24 2
 
-168 -> [?]
-240 -> [?][18,16,4,2]
-260 -> [?][18,16,4,2]
-360 -> [?][18,16,4,2][18,16,4,4]
-364 -> [?][18,16,4,2][18,16,4,4]
-388 -> [?][18,16,4,2]
-280 -> 
+\begin{center}
+    \begin{tabular}{c | c | c | c | c | c | c | c | c}
+        \textbf{Address} & \textbf{168} & \textbf{240} & \textbf{260} & \textbf{360} & \textbf{364} & \textbf{388} & \textbf{280} & \textbf{176} \\
+        \hline
+        0x10000: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0  \\ 
+        0xFFFC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFF8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFF0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFEC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFE8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFE0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFDC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFD8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFD0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFCC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFC8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFC0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFBC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFB8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFB0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFAC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFA8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFFA0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFF9C: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFF98: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0xFF90: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+    \end{tabular}
+\end{center}
 
-176 -> [?]
+
+\textit{I don't feel confident in this answer and suggest the exercise description is revisited.}

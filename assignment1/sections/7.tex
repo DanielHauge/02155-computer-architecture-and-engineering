@@ -7,5 +7,5 @@ Both techniques are fundamental when looking at procedure call patterns: \textbf
 
 \subsection*{b.}
 No registers are saved across a procedure call without additional instructions.
-Only registers that is put in the stack or stored elsewhere in memory with instructions will be saved.
+Only registers that is put in the stack or stored elsewhere in memory with instructions will be protected from potential overwrites.
 It is convention to save and restore return address and used temporaries to x8-x9 and x18-x27 registers from the stack.
