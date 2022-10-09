@@ -1,13 +1,16 @@
 \section*{A1.4}
-\textit{Disclaimer: This exercise was quite open for interpretation. The following assumptions are made}
+\textit{Disclaimer: The intention and idea of this exercise was very hard for me to understand, and clarification was not available for me. Therefor a best attempt with the following assumptions was made}
 \begin{itemize}
     \item \textit{... contains operations to facilitate calee save strategy}
     \item \textit{... contains no operations that alter registers besides those used to fulfill calee save strategy}
     \item \textit{... contains operations that always save and restore saved registers regardless of usage}
-    \item \textit{There is no saved argument, and thus not pushed to stack at any point}
     \item \textit{The PC location is instruction addresess}
+    \item \textit{Only saved registers and return adress is saved and restored from the stack}
+    \item \textit{Only used saved registers will be saved to the stack}
     \item \textit{Unused stack space has been zeroed}
     \item \textit{The first ... contains no operations that push values to the stack and at that point the stack is empty at the assumed initialization.}
+    \item \textit{add or lw does not implicitly push to the stack}
+    \item \textit{Restoration of temporary registers do not zero the memory}
 \end{itemize}
 
 
@@ -15,30 +18,20 @@
     \begin{tabular}{c | c | c | c | c | c | c | c | c}
         \textbf{Address} & \textbf{168} & \textbf{240} & \textbf{260} & \textbf{360} & \textbf{364} & \textbf{388} & \textbf{280} & \textbf{176} \\
         \hline
-        0x10000: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0  \\ 
-        0xFFFC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFF8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFF0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFEC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFE8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFE0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFDC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFD8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFD0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFCC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFC8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFC0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFBC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFB8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFB0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFAC: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFA8: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFFA0: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFF9C: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFF98: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
-        0xFF90: & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0    \\
+        0x10000:    & 0 & 176 & 176 & 176 & 176 & 176 & 176 & 176  \\ 
+        0xFFFC:     & 0 & 18 & 18 & 18 & 18 & 18 & 18 & 18    \\
+        0xFFF8:     & 0 & 16 & 16 & 16 & 16 & 16 & 16 & 16    \\
+        0xFFF0:     & 0 & 4 & 4 & 4 & 4 & 4 & 4 & 4    \\
+        0xFFEC:     & 0 & 2 & 2 & 2 & 2 & 2 & 2 & 2    \\
+        0xFFE8:     & 0 & 0 & 0 & 264 & 264 & 264 & 264 & 264    \\
+        0xFFE0:     & 0 & 0 & 0 & 4 & 4 & 4 & 4 & 4    \\
     \end{tabular}
 \end{center}
 
+The temporary variables that are set from 152 to 168, would need to be saved and restored by the calee ie. push to stack instructions at the beginning of procedure B, and restoration instructions before jalr at instr addr 300.
+The temporary variable used at instr addr 240, would also require a push and restoration from the stack, thus pushing instructions first thing in procedure C and restoration last thing before 388.
+The stack does not change much after PC arrives at 360, that is because it is assumed we reached the leaf procedure and now only need to restore temporary variables for the caller.
+Popping values from the stack does not zero the memory, which is why the stack stays mostly the same after 360, but the stack pointer will be changing after each jalr instruction. 
 
-\textit{I don't feel confident in this answer and suggest the exercise description is revisited.}
+
+\textit{I don't feel confident that i've captured the intention in this answer and suggest the exercise description is revisited if reused.}
