@@ -1,1 +1,35 @@
 \section*{A2.2}
+
+Total amount of cycles required of the program using double precision is given as: $C_{double} = 10^9$
+Total amount of cycles spent on FP operations using double precision is: 
+$$ C_{\textit{FP-double}} = 10^9 \cdot 0.6 = 6 \cdot 10^8 $$
+Total amount of cycles spent on non-FP operations is:
+$$ C_R = 10^9 \cdot 0.4 = 4 \cdot 10^8 $$
+
+
+With single precision (binary32) and all FP operations being independent, 2 operations can always be executed in parallel, thus halving the required FP operations.
+$$ C_{\textit{FP-single}} = \frac{C_{\textit{FP-double}}}{2} = 3 \cdot 10^8 $$
+The total clock cycles required with single precision is: 
+$$ C_{single} = C_{\textit{FP-single}} + C_R = 7 \cdot 10^8 $$
+
+
+With half precision (binary16) and all FP operations being independent, 4 operations can be executed in parallel, thus quartering the required FP operations.
+$$ C_{\textit{FP-half}} = \frac{C_{\textit{FP-double}}}{4} = 1.5 \cdot 10^8 $$
+The total clock cycles required with single precision is: 
+$$ C_{half} = C_{\textit{FP-half}} + C_R = 5.5 \cdot 10^8 $$
+
+Execution time is found with the following equation:
+
+$$ \frac{\textbf{CPU Clock Cycles}}{\textbf{Clock rate}} = \textbf{CPU Time} $$
+
+The execution times are:
+$$T_{double} = \frac{C_{double}}{f} = \frac{10^9}{4 \textit{GHz}} = \frac{10^9}{4 \cdot 10^9 \textit{Hz}} = 0.25 \textit{s} = 250 \textit{ms}$$
+$$T_{single} = \frac{C_{single}}{f} = \frac{7 \cdot 10^8}{4 \textit{GHz}} = 175 \textit{ms}$$
+$$T_{half} = \frac{C_{half}}{f} = \frac{5.5 \cdot 10^8}{4 \textit{GHz}} = 137.5 \textit{ms}$$
+
+
+Speedup of \textbf{Single precision} over \textbf{Double precision} is: $ \frac{T_{double}}{T_{single}} \approx 1.428 $
+
+Speedup of \textbf{Half precision} over \textbf{Double precision} is: $ \frac{T_{double}}{T_{half}} \approx 1,818 $
+
+\newpage

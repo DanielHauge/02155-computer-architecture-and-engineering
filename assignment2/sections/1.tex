@@ -1,34 +1,78 @@
 \section*{A2.1}
 
+\subsection*{\textbf{a)}}
+
+\subsubsection*{P1}
+\begin{center}
+    \begin{tabular}{c | c | c | c | c | c | c | c | c | c }
+        \textbf{Instruction} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} \\
+        \hline
+        addi a2, x0, 5 & x & & & & & & & \\
+        lw a1, 0(a0) & & x & & & & & & & \\
+        addi a1, a1, 5 & & & x & & & & &  \\
+        sw a1 , 0( a0 ) & & & & x & & & & & \\
+        add a1 , x0 , a2 & & & & & x & & & & \\
+        beq a1 , x0 , branch1   & & & & & & x & & &  \\
+        beq a1 , a2 , branch2 & & & & &   &   & x &  \\
+        addi a1 , a1 , 6 & & & & &   &   &   & x  \\
+        addi a2 , a2 , 7 & & & & & & & & & x   \\
+    \end{tabular}
+\end{center}
 
 
+\subsubsection*{P2}
+\begin{center}
+    \tiny
+    \begin{tabular}{c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c}
+        \textbf{Instruction} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{11} & \textbf{12} & \textbf{13} & \textbf{14} & \textbf{15} & \textbf{16} & \textbf{17} & \textbf{18} & \textbf{19} & \textbf{20} & \textbf{21}  \\
+        \hline
+        addi a2, x0, 5           & F & D & E & M & W &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &  \\
+        lw a1, 0(a0)             &   & F & D & E & M & W &   &   &   &   &   &   &   &   &   &   &   &   &   &   &  \\
+        addi a1, a1, 5           &   &   & F & D & D & D & E & M & W &   &   &   &   &   &   &   &   &   &   &   &  \\
+        sw a1 , 0( a0 )          &   &   &   & F & F & F & D & D & D & E & M & W &   &   &   &   &   &   &   &   &  \\
+        add a1 , x0 , a2         &   &   &   &   &   &   & F & F & F & D & E & M & W &   &   &   &   &   &   &   &  \\
+        beq a1 , x0 , branch1    &   &   &   &   &   &   &   &   &   & F & D & D & D & E & M & W &   &   &   &   &  \\
+        beq a1 , a2 , branch2    &   &   &   &   &   &   &   &   &   &   & F & F & F & D & E & M & W &   &   &   &  \\
+        add a1 , a1 , a1         &   &   &   &   &   &   &   &   &   &   &   &   &   & F & D &   &   &   &   &   &  \\
+        add a2 , a2 , a2         &   &   &   &   &   &   &   &   &   &   &   &   &   &   & F &   &   &   &   &   &  \\
+        addi a1 , a1 , 6         &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & F & D & E & M & W &  \\
+        addi a2 , a2 , 7         &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & F & D & E & M & W \\
+    \end{tabular}
+\end{center}
 
+\subsubsection*{P3}
 
+\begin{center}
+    \tiny
+    \begin{tabular}{c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c }
+        \textbf{Instruction} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{11} & \textbf{12} & \textbf{13} & \textbf{14} & \textbf{15} & \textbf{16} \\
+        \hline
+        addi a2, x0, 5           & F & D & E & M & W &   &   &   &   &   &   &   &   &   &   &  \\
+        lw a1, 0(a0)             &   & F & D & E & M & W &   &   &   &   &   &   &   &   &   &  \\
+        addi a1, a1, 5           &   &   & F & D & D & E & M & W &   &   &   &   &   &   &   &  \\
+        sw a1 , 0( a0 )          &   &   &   & F & F & D & E & M & W &   &   &   &   &   &   &  \\
+        add a1 , x0 , a2         &   &   &   &   &   & F & D & E & M & W &   &   &   &   &   &  \\
+        beq a1 , x0 , branch1    &   &   &   &   &   &   & F & D & E & M & W &   &   &   &   &  \\
+        beq a1 , a2 , branch2    &   &   &   &   &   &   &   & F & D & E & M & W &   &   &   &  \\
+        add a1 , a1 , a1         &   &   &   &   &   &   &   &   & F & D &   &   &   &   &   &  \\
+        add a2 , a2 , a2         &   &   &   &   &   &   &   &   &   & F &   &   &   &   &   &  \\
+        addi a1 , a1 , 6         &   &   &   &   &   &   &   &   &   &   & F & D & E & M & W &  \\
+        addi a2 , a2 , 7         &   &   &   &   &   &   &   &   &   &   &   & F & D & E & M & W \\
+    \end{tabular}
+\end{center}
 
+\subsection*{\textbf{b)}}
 
-% \begin{figure}[H]
-% \centering{\caption{Problem a.}\begin{minted}[linenos,frame=single]{nasm}
-% ADDI t0, x0, 8      // Sets temporary register to 8
-% REM t0, x4, t0      // Uses signed remainder ops similar to modulus.
-% BNE x0, t0, skip    // If x4 mod 8 is not 0, then x4 is not a multiple of 8.
-% ADD x1, x0, x0      // Set x1 to 0 when x4 mod 8 was actully 0.
-% skip:
-% NOP
-% \end{minted}
-% }
-% \end{figure}
+\textbf{P1} requires 9 clock cycles, each taking 10 ns. $ T_{P_1} = 9 \cdot 10 \textit{ns} = 90 \textit{ns} $
 
-% \begin{figure}[H]
-% \centering{\caption{Problem b. Bit mask way (Personal preference)}\begin{minted}[linenos,frame=single]{nasm}
-% ANDI x1, x5, 31      // Applies an immediate bit mask on x5 stored in x1
-% \end{minted}
-% }
-% \end{figure}
+\textbf{P2} required 21 clock cycles, each taking 2 ns. $ T_{P_2} = 21 \cdot 2 \textit{ns} = 42 \textit{ns} $
 
-% \begin{figure}[H]
-%     \centering{\caption{Problem b. Remainder way}\begin{minted}[linenos,frame=single]{nasm}
-% ADDI t0, x0, 32     // Sets temporary register to 32 for REM.
-% REM x1, x4, t0      // Uses signed remainder ops similar to modulus.
-%     \end{minted}
-%     }
-% \end{figure}
+\textbf{P3} required 16 clock cycles, each taking 2 ns. $ T_{P_3} = 16 \cdot 2 \textit{ns} = 32 \textit{ns} $
+
+\subsection*{\textbf{c)}}
+
+Speedup of \textbf{P3} over \textbf{P1} is: $ \frac{T_{P_1}}{T_{P_3}} = 2.8125 $
+
+Speedup of \textbf{P3} over \textbf{P2} is: $ \frac{T_{P_2}}{T_{P_3}} = 1,3125 $
+
+\newpage
