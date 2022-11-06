@@ -1,1 +1,20 @@
 \section*{A2.4}
+Given instruction miss rate of the i'th cache: $IM_i = [0.04, 0.02, 0.02]$
+
+Given data miss rate of the i'th cache: $DM_i = [0.09, 0.05, 0.03]$
+
+Given miss penalty of the i'th cache: $MP_i = [7, 10, 10]$
+
+Given the percentage of load \& store instructions: $LSP = 0.40$
+
+Miss cycles per instructions is calculated with the following equations:
+
+$$ I_i = IM_i \cdot MP_i = [0.28, 0.2, 0.2] $$
+$$ D_i = LSP \cdot DM_i \cdot MP_i = [0.252, 0.2, 0.12] $$
+
+Memory stall cycles can then be calculated with:
+
+$$ MS_i = I_i + D_i = [0.532, 0.4, 0.32] $$
+
+The cache that stalls the most, and thus contributes most cycles from cache misses is cache 1.
+Using cache 1 costs 0.532 clock cycles per instruction as a result of cache misses.

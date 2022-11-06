@@ -1,1 +1,88 @@
 \section*{A2.3}
+
+\subsection*{a}
+\textbf{C1}
+
+There are 2 bytes in a word, one bit is needed to adress both first and second byte of a word. Therefor 1 byte offset bit.
+With 8 word per blocks, we need $log_2(8) = 3$ bits to address each word. Therefor 3 block offset bits
+
+With a cache of 4000 bytes, and each blocks containing 16 bytes, total amount of blocks are: $\frac{4000}{16} = 250$.
+To address all 250 blocks, we need $log_2(250) \approx 7.96 $ bits. Therefor atleast 8 index bits.
+
+Tag bits consists of the remanining available bits.
+
+\begin{center}
+    \begin{tabular}{c | c | c | c}
+        tag & index  &  Block offset &  byte offset  \\
+        \hline
+        19 & 8 & 3 & 1  \\
+    \end{tabular}
+\end{center}
+
+
+\textbf{C2}
+
+In the same manner, one byte offset bit is required, as we need byte addressing, both first or second byte need to be addressed. Therefor 1 byte offset bit.
+With 4 word per blocks, we need $log_2(4) = 2$ bits to address each word. Therefor 2 block offset bits
+
+With a cache of 4000 bytes, and each blocks containing 8 bytes, total amount of blocks are: $\frac{4000}{8} = 500$.
+Each cache set contain $\frac{500}{4} = 125$. To address each block we need $log_2(125) \approx 6.96$. Therefor requiring atleast 7 index bits.
+
+Tag bits consists of the remanining available bits.
+
+\begin{center}
+    \begin{tabular}{c | c | c | c}
+        tag & index  &  Block offset &  byte offset  \\
+        \hline
+        21 & 7 & 2 & 1  \\
+    \end{tabular}
+\end{center}
+
+\subsection*{b}
+
+\textbf{C1}
+
+The bits required is according to the book (where n is amount of index bits):
+$$ 2^n \cdot (\textbf{block size} + \textbf{tag size} + \textbf{valid field size}) $$
+$$ \textbf{block size = 16 bytes = 128 bits} $$
+$$ 2^8 \cdot (128 + 19 + 1) = 37888 $$
+
+The total number of bits required for the cache is 37888.
+
+\textbf{C2}
+
+The bits required is according to the book (where n is amount of index bits):
+$$ 2^n \cdot (\textbf{block size} + \textbf{tag size} + \textbf{valid field size}) $$
+$$ \textbf{block size = 8 bytes = 64 bits} $$
+$$ 2^7 \cdot (64 + 21 + 1) = 11008 $$
+
+The total number of bits required for the cache is 11008.
+
+\subsection*{c}
+
+Assuming that each memory access is sequential by descending order.
+
+\begin{center}
+    \begin{tabular}{c | c  c  c  c | c  c  c  c }
+        & \multicolumn{4}{c}{\textbf{C1}} & \multicolumn{4}{c}{\textbf{C2}} \\
+        \cline{1-4} 
+        \cline{4-9}
+        Address & Tag & Index & Offset & Hit/Miss & Tag & Index & Offset & Hit/Miss \\
+        0x0022 & 0 & 10 & 10 & Miss & 0 & 100 & 10 & Miss \\
+        0x0023 & 0 & 10 & 11 & Hit & 0 & 100 & 11 & Hit \\
+        0x0034 & 0 & 11 & 100 & Miss & 0 & 110 & 100 & Miss \\
+        0x0420 & 0 & 1000010 & 0 & Miss & 1 & 100 & 0 & Miss \\
+        0x1420 & 1 & 1000010 & 0 & Miss & 101 & 100 & 0 & Miss \\
+        0x0422 & 0 & 1000010 & 10 & Miss & 1 & 100 & 10 & Hit \\
+        0x1430 & 1 & 1000011 & 0 & Miss & 101 & 110 & 0 & Hit \\
+    \end{tabular}
+\end{center}
+
+\subsection*{d}
+Assuming hit ratio of accesses from part \textit{c}
+
+\textbf{C1}: $\frac{1}{7} \approx 0.14$
+
+\textbf{C2}: $\frac{3}{7} \approx 0.42$
+
+\newpage
