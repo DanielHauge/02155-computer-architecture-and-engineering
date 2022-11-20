@@ -1,4 +1,3 @@
-module main
+module final
 
 go 1.19
-

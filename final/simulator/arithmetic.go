@@ -1,18 +1,18 @@
-package main
+package simulator
 
-func add(rd int, rs1 int, rs2 int) {
+func add(rd int32, rs1 int32, rs2 int32) {
 	reg[rd] = reg[rs1] + reg[rs2]
 }
 
-func sub(rd int, rs1 int, rs2 int) {
+func sub(rd int32, rs1 int32, rs2 int32) {
 	reg[rd] = reg[rs1] - reg[rs2]
 }
 
-func addi(rd int, rs1 int, imm12 int) {
+func addi(rd int32, rs1 int32, imm12 int32) {
 	reg[rd] = reg[rs1] + imm12
 }
 
-func slt(rd int, rs1 int, rs2 int) {
+func slt(rd int32, rs1 int32, rs2 int32) {
 	if reg[rs1] < reg[rs2] {
 		reg[rd] = 1
 	} else {
@@ -20,7 +20,7 @@ func slt(rd int, rs1 int, rs2 int) {
 	}
 }
 
-func slti(rd int, rs1 int, imm12 int) {
+func slti(rd int32, rs1 int32, imm12 int32) {
 	if reg[rs1] < imm12 {
 		reg[rd] = 1
 	} else {
@@ -28,7 +28,7 @@ func slti(rd int, rs1 int, imm12 int) {
 	}
 }
 
-func sltu(rd int, rs1 int, rs2 int) {
+func sltu(rd int32, rs1 int32, rs2 int32) {
 	if castToUint(&reg[rs1]) < castToUint(&reg[rs2]) {
 		reg[rd] = 1
 	} else {
@@ -36,7 +36,7 @@ func sltu(rd int, rs1 int, rs2 int) {
 	}
 }
 
-func sltiu(rd int, rs1 int, imm12 int) {
+func sltiu(rd int32, rs1 int32, imm12 int32) {
 	if castToUint(&reg[rs1]) < castToUint(&imm12) {
 		reg[rd] = 1
 	} else {
@@ -44,10 +44,10 @@ func sltiu(rd int, rs1 int, imm12 int) {
 	}
 }
 
-func lui(rd int, imm20 int) {
+func lui(rd int32, imm20 int32) {
 	reg[rd] = imm20 << 12
 }
 
-func auip(rd int, imm20 int) {
-	reg[rd] = pc + imm20<<12
+func auip(rd int32, imm20 int32) {
+	reg[rd] = Pc + imm20<<12
 }
