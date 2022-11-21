@@ -12,6 +12,7 @@ func (instr *instruction) Execute() {
 	operation(instr.opcode, instr.funct3, instr.funct7)(*instr)
 }
 
+// https://github.com/michaeljclark/rv8/blob/master/doc/pdf/riscv-instructions.pdf
 func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
 	switch opcode {
 	case 1:
