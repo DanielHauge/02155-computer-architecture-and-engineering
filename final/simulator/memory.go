@@ -1,6 +1,9 @@
 package simulator
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 var (
 	Pc  int32
@@ -15,6 +18,13 @@ func Initialize(mem []byte) {
 	Reg[2] = int32(len(mem))
 }
 
+func Print_registers() {
+	fmt.Println()
+	for i, r := range Reg {
+		fmt.Printf(" x%v:\t %v\n", i, r)
+	}
+}
+
 func Dump_registers_to_file(path string) {
 	bs := make([]byte, 4*32)
 	for _, i := range Reg {
@@ -22,6 +32,19 @@ func Dump_registers_to_file(path string) {
 		bs = append(bs, b...)
 	}
 	os.WriteFile(path, bs, 0644)
+}
+
+func Print_memory(n int) {
+	fmt.Println("\n##### Memory dump")
+	for i, b := range Mem {
+		fmt.Printf("%b ", b)
+		if i%4 == 0 {
+			fmt.Println()
+		}
+		if i >= n {
+			return
+		}
+	}
 }
 
 func lw(rd int32, rs1 int32, imm12 int32) {

@@ -24,7 +24,7 @@ func main() {
 	mem := append(binary, zeros...)
 	s.Initialize(mem)
 	if debugMode {
-		print_memory(len(binary))
+		s.Print_memory(len(binary))
 		fmt.Println()
 	}
 
@@ -37,25 +37,8 @@ func main() {
 		inst.Execute()            // Execute operation from instruction
 		s.Pc += 4                 // Increment program counter
 	}
-	print_registers()
-}
-
-func print_memory(n int) {
-	fmt.Println("\n##### Memory dump")
-	for i, b := range s.Mem {
-		fmt.Printf("%b ", b)
-		if i%4 == 0 {
-			fmt.Println()
-		}
-		if i >= n {
-			return
-		}
-	}
-}
-
-func print_registers() {
-	fmt.Println()
-	for i, r := range s.Reg {
-		fmt.Printf(" x%v:\t %v\n", i, r)
+	s.Print_registers()
+	if len(os.Args) > 2 {
+		s.Dump_registers_to_file(os.Args[2])
 	}
 }

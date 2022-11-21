@@ -25,9 +25,9 @@ func Decode(instr []byte) instruction {
 		rd:       (readAsInt(instr) >> 7) & 0b11111,
 		rs1:      (readAsInt(instr) >> 15) & 0b11111,
 		rs2:      (readAsInt(instr) >> 20) & 0b11111,
-		imm12_I:  ((readAsInt(instr) & -1048576) >> 20) & 0b111111111111,
+		imm12_I:  (readAsInt(instr) >> 20) & 0b111111111111,
 		imm12_SB: ((readAsInt(instr) >> 20) & 0xFE0) | ((readAsInt(instr) >> 7) & 0x1F),
-		imm20:    ((readAsInt(instr) & -4096) >> 12) & 0xFFFFF,
+		imm20:    (readAsInt(instr) >> 12) & 0xFFFFF,
 	}
 }
 
