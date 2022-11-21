@@ -1,5 +1,7 @@
 package simulator
 
+import "os"
+
 var (
 	Pc  int32
 	Reg []int32
@@ -11,6 +13,15 @@ func Initialize(mem []byte) {
 	Mem = mem
 	Reg = make([]int32, 32)
 	Reg[2] = int32(len(mem))
+}
+
+func Dump_registers_to_file(path string) {
+	bs := make([]byte, 4*32)
+	for _, i := range Reg {
+		b := castToBytes(i)
+		bs = append(bs, b...)
+	}
+	os.WriteFile(path, bs, 0644)
 }
 
 func lw(rd int32, rs1 int32, imm12 int32) {

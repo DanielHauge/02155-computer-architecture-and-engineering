@@ -59,7 +59,3 @@ func print_registers() {
 		fmt.Printf(" x%v:\t %v\n", i, r)
 	}
 }
-
-func dump_registers_to_file(path string) {
-	//TODO
-}
