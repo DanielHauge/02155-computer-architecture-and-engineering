@@ -13,7 +13,7 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Printf("Simulating program from binaries in: %s\n", os.Args[1])
-	debugMode := os.Getenv("debug") != ""
+	debugMode := os.Getenv("debug") == ""
 
 	binary, err := os.ReadFile(os.Args[1])
 	if err != nil {
