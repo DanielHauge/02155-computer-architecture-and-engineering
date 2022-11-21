@@ -9,7 +9,18 @@ func wrap2(op func(int32, int32), opFormatFunc func(instruction, func(int32, int
 }
 
 func (instr *instruction) Execute() {
-	operations[instr.opcode](*instr)
+	operation(instr.opcode, instr.funct3, instr.funct7)(*instr)
+}
+
+func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
+	switch opcode {
+	case 1:
+		switch funct3 {
+		case 1:
+			return operations[1]
+		}
+	}
+	return func(i instruction) { /* Similar to nothing (Nop) */ }
 }
 
 var operations = map[int32]func(instruction){

@@ -2,6 +2,8 @@ package simulator
 
 type instruction struct {
 	opcode   int32
+	funct3   int32
+	funct7   int32
 	rd       int32
 	rs1      int32
 	rs2      int32
@@ -10,15 +12,18 @@ type instruction struct {
 	imm20    int32
 }
 
+// Opcodes from: https://github.com/michaeljclark/rv8/blob/master/doc/pdf/riscv-instructions.pdf
 func Decode(instr []byte) instruction {
 	return instruction{
 		opcode:   int32(instr[3] & 0x7F),
-		rd:       (readAsInt(instr[2:3]) & 0xF80) >> 7,
-		rs1:      (readAsInt(instr[1:2]) & 0xF80) >> 7,
-		rs2:      (readAsInt(instr[0:1]) & 0x1F0) >> 4,
-		imm12_I:  (readAsInt(instr[0:1]) & 0xFFF0) >> 4,
-		imm12_SB: ((readAsInt(instr[0:1]) & 0xFE00) >> 2) | ((readAsInt(instr[2:3]) & 0xF80) >> 7),
-		imm20:    (readAsInt(instr[0:2]) & 0xFFFFF0) >> 4,
+		funct3:   (readAsInt(instr) >> 12) & 7,
+		funct7:   (readAsInt(instr) >> 25) & 0x7F,
+		rd:       (readAsInt(instr) & 0xF80) >> 7,
+		rs1:      (readAsInt(instr) & 0xF80) >> 7,
+		rs2:      (readAsInt(instr) & 0x1F0) >> 4,
+		imm12_I:  ((readAsInt(instr) & -1048576) >> 20) & 0xFFF,
+		imm12_SB: ((readAsInt(instr) >> 20) & 0xFE0) | ((readAsInt(instr) >> 7) & 0x1F),
+		imm20:    ((readAsInt(instr) & -4096) >> 12) & 0xFFFFF,
 	}
 }
 
