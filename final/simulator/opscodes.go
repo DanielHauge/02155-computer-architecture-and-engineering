@@ -15,56 +15,107 @@ func (instr *instruction) Execute() {
 // https://github.com/michaeljclark/rv8/blob/master/doc/pdf/riscv-instructions.pdf
 func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
 	switch opcode {
-	case 1:
+	case 0x37: // 0110111
+		return wrap2(lui, uFormat)
+	case 0x17: // 0010111
+		return wrap2(auip, uFormat)
+	case 0x6F: // 1101111
+		return wrap2(jal, uFormat)
+	case 0x67: // 1100111
+		return wrap3(jalr, iFormat)
+	case 0x63: // 1100011
 		switch funct3 {
+		case 0:
+			return wrap3(beq, sFormat)
 		case 1:
-			return operations[1]
+			return wrap3(bne, sFormat)
+		case 4:
+			return wrap3(blt, sFormat)
+		case 5:
+			return wrap3(bge, sFormat)
+		case 6:
+			return wrap3(bltu, sFormat)
+		case 7:
+			return wrap3(bgeu, sFormat)
+		}
+	case 0x3: // 0000011
+		switch funct3 {
+		case 0:
+			return wrap3(lb, iFormat)
+		case 1:
+			return wrap3(lh, iFormat)
+		case 2:
+			return wrap3(lw, iFormat)
+		case 4:
+			return wrap3(lbu, iFormat)
+		case 5:
+			return wrap3(lhu, iFormat)
+		case 6:
+			return wrap3(lwu, iFormat)
+		}
+	case 0x23: // 0100011
+		switch funct3 {
+		case 0:
+			return wrap3(sb, sFormat)
+		case 1:
+			return wrap3(sh, sFormat)
+		case 2:
+			return wrap3(sw, sFormat)
+		}
+	case 0x13: // 0010011
+		switch funct3 {
+		case 0:
+			return wrap3(addi, iFormat)
+		case 1:
+			return wrap3(slli, iFormat)
+		case 2:
+			return wrap3(slti, iFormat)
+		case 3:
+			return wrap3(sltiu, iFormat)
+		case 4:
+			return wrap3(xori, iFormat)
+		case 5:
+			switch funct7 {
+			case 0:
+				return wrap3(srli, iFormat)
+			case 0x8:
+				return wrap3(srai, iFormat)
+			}
+		case 6:
+			return wrap3(ori, iFormat)
+		case 7:
+			return wrap3(andi, iFormat)
+		}
+	case 0x33: // 0110011
+		switch funct3 {
+		case 0:
+			switch funct7 {
+			case 0:
+				return wrap3(add, rFormat)
+			case 0x8:
+				return wrap3(sub, rFormat)
+			}
+		case 1:
+			return wrap3(sll, rFormat)
+		case 2:
+			return wrap3(slt, rFormat)
+		case 3:
+			return wrap3(sltu, rFormat)
+		case 4:
+			return wrap3(xor, rFormat)
+		case 5:
+			switch funct7 {
+			case 0:
+				return wrap3(srl, rFormat)
+			case 0x8:
+				return wrap3(sra, rFormat)
+			}
+		case 6:
+			return wrap3(or, rFormat)
+		case 7:
+			return wrap3(and, rFormat)
 		}
 	}
-	return func(i instruction) { /* Similar to nothing (Nop) */ }
-}
 
-var operations = map[int32]func(instruction){
-	// Arithmetic
-	1: wrap3(add, rFormat),
-	2: wrap3(sub, rFormat),
-	3: wrap3(addi, iFormat),
-	4: wrap3(slt, rFormat),
-	5: wrap3(slti, iFormat),
-	6: wrap3(sltu, rFormat),
-	7: wrap3(sltiu, iFormat),
-	8: wrap2(lui, uFormat),
-	9: wrap2(auip, uFormat),
-	// Logical
-	11: wrap3(and, rFormat),
-	12: wrap3(or, rFormat),
-	13: wrap3(xor, rFormat),
-	14: wrap3(andi, iFormat),
-	15: wrap3(ori, iFormat),
-	16: wrap3(xori, iFormat),
-	17: wrap3(sll, rFormat),
-	18: wrap3(srl, rFormat),
-	19: wrap3(sra, rFormat),
-	20: wrap3(slli, iFormat),
-	21: wrap3(srli, iFormat),
-	22: wrap3(srai, iFormat),
-	// Memory
-	24: wrap3(lw, iFormat),
-	25: wrap3(lh, iFormat),
-	26: wrap3(lb, iFormat),
-	27: wrap3(lwu, iFormat),
-	28: wrap3(lhu, iFormat),
-	29: wrap3(lbu, iFormat),
-	31: wrap3(sw, sFormat),
-	32: wrap3(sh, sFormat),
-	33: wrap3(sb, sFormat),
-	// Branching
-	34: wrap3(beq, sFormat),
-	35: wrap3(bne, sFormat),
-	36: wrap3(bge, sFormat),
-	37: wrap3(bgeu, sFormat),
-	38: wrap3(blt, sFormat),
-	39: wrap3(bltu, sFormat),
-	40: wrap2(jal, uFormat),
-	41: wrap3(jalr, iFormat),
+	return func(i instruction) { /* Could not find operation -> Similar to nothing (Nop) */ }
 }
