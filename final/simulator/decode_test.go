@@ -17,6 +17,17 @@ func Test_Decode(t *testing.T) {
 	assert(decoded.funct7, 127, t)
 }
 
+func Test_Decode2(t *testing.T) {
+	li_a0_5 := 0x500513
+	bs := castToBytes(int32(li_a0_5))
+	// Reverse cause of endian stuff!
+	for i, j := 0, len(bs)-1; i < j; i, j = i+1, j-1 {
+		bs[i], bs[j] = bs[j], bs[i]
+	}
+	decoded := Decode(bs)
+	assert(decoded.opcode, 0x13, t)
+}
+
 func Test_R(t *testing.T) {
 	testFunc := func(a int32, b int32, c int32) {
 		assert(a, 25, t)

@@ -14,8 +14,12 @@ type instruction struct {
 
 // Opcodes from: https://github.com/michaeljclark/rv8/blob/master/doc/pdf/riscv-instructions.pdf
 func Decode(instr []byte) instruction {
+	// Reverse because of endian order. (I've mistakenly worked with big endian, where instructions come in little endian)
+	for i, j := 0, len(instr)-1; i < j; i, j = i+1, j-1 {
+		instr[i], instr[j] = instr[j], instr[i]
+	}
 	return instruction{
-		opcode:   int32(instr[3] & 0x7F),
+		opcode:   (readAsInt(instr) & 0x7F),
 		funct3:   (readAsInt(instr) >> 12) & 7,
 		funct7:   (readAsInt(instr) >> 25) & 0x7F,
 		rd:       (readAsInt(instr) & 0xF80) >> 7,
