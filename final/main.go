@@ -20,7 +20,7 @@ func main() {
 		panic(err)
 	}
 	programLength := int32(len(binary))
-	zeros := make([]byte, 100-programLength)
+	zeros := make([]byte, 100000-programLength)
 	mem := append(binary, zeros...)
 	s.Initialize(mem)
 	if debugMode {
