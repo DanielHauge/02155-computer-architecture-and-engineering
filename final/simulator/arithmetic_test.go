@@ -36,7 +36,7 @@ func Test_slti(t *testing.T) {
 }
 
 func Test_sltu(t *testing.T) {
-	Reg[5] = -1
+	Reg[5] = castToUint2(-1)
 	Reg[6] = 1
 	sltu(1, 5, 6)
 	assert(Reg[1], 0, t)
@@ -44,7 +44,7 @@ func Test_sltu(t *testing.T) {
 
 func Test_sltiu(t *testing.T) {
 	Reg[5] = 1
-	sltiu(1, 5, -1)
+	sltiu(1, 5, castToUint2(-1))
 	assert(Reg[1], 1, t)
 }
 
@@ -55,6 +55,6 @@ func Test_lui(t *testing.T) {
 
 func Test_auip(t *testing.T) {
 	Pc = 12
-	auip(1, 1)
-	assert(Reg[1], 4108, t)
+	auip(1, 52)
+	assert(Reg[1], 0x40000, t)
 }

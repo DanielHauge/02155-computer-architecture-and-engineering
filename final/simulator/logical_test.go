@@ -56,10 +56,10 @@ func Test_srl(t *testing.T) {
 }
 
 func Test_sra(t *testing.T) {
-	Reg[5] = -1
+	Reg[5] = castToUint2(-1)
 	Reg[6] = 2
 	sra(1, 5, 6)
-	assert(Reg[1], -1, t)
+	assert(Reg[1], castToUint2(-1), t)
 }
 
 func Test_slli(t *testing.T) {
@@ -75,7 +75,7 @@ func Test_srli(t *testing.T) {
 }
 
 func Test_srai(t *testing.T) {
-	Reg[5] = -1
+	Reg[5] = castToUint2(-1)
 	srai(1, 5, 2)
-	assert(Reg[1], -1, t)
+	assert(Reg[1], castToUint2(-1), t)
 }

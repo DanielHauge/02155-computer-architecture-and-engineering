@@ -1,48 +1,120 @@
 package simulator
 
+import "fmt"
+
+var Debug bool
+
 type instruction struct {
-	opcode   int32
-	funct3   int32
-	funct7   int32
-	rd       int32
-	rs1      int32
-	rs2      int32
-	imm12_I  int32
-	imm12_SB int32
-	imm20    int32
+	opcode uint32
+	funct3 uint32
+	funct7 uint32
+	rd     uint32
+	rs1    uint32
+	rs2    uint32
+	Imm_I  uint32
+	Imm_S  uint32
+	Imm_U  uint32
+	Imm_B  uint32
+	Imm_J  uint32
 }
 
-// Opcodes from: https://github.com/michaeljclark/rv8/blob/master/doc/pdf/riscv-instructions.pdf
-func Decode(instr []byte) instruction {
-	// Reverse because of endian order. (I've mistakenly worked with big endian, where instructions come in little endian)
+func Decode(instr_original []byte) instruction {
+
+	instr := make([]byte, 4)
+	copy(instr, instr_original)
+
+	// Reverse cause of endian.
 	for i, j := 0, len(instr)-1; i < j; i, j = i+1, j-1 {
 		instr[i], instr[j] = instr[j], instr[i]
 	}
-	return instruction{
-		opcode:   (readAsInt(instr) & 0x7F),
-		funct3:   (readAsInt(instr) >> 12) & 7,
-		funct7:   (readAsInt(instr) >> 25) & 0x7F,
-		rd:       (readAsInt(instr) >> 7) & 0b11111,
-		rs1:      (readAsInt(instr) >> 15) & 0b11111,
-		rs2:      (readAsInt(instr) >> 20) & 0b11111,
-		imm12_I:  (readAsInt(instr) >> 20) & 0b111111111111,
-		imm12_SB: ((readAsInt(instr) >> 20) & 0xFE0) | ((readAsInt(instr) >> 7) & 0x1F),
-		imm20:    (readAsInt(instr) >> 12) & 0xFFFFF,
+
+	instrAsInt := readAsUint(instr)
+
+	if Debug {
+		fmt.Printf("%032b (%v):\t", instrAsInt, Pc)
 	}
+
+	signed := ((instrAsInt >> 31) & 0b1) == 1
+	bit7b := ((instrAsInt >> 7) & 0b1) == 1
+	bit20j := ((instrAsInt >> 19) & 0b1) == 1
+	var (
+		Imm_IS_Mask, Imm_B_Mask, Imm_B_7Mask, Imm_J_Mask, Imm_J_20_Mask uint32
+	)
+	if signed {
+		Imm_IS_Mask = 0b11111111111111111111100000000000
+		Imm_B_Mask = 0b11111111111111111110000000000000
+		Imm_J_Mask = 0b11111111111000000000000000000000
+	} else {
+		Imm_IS_Mask = 0
+		Imm_B_Mask = 0
+		Imm_J_Mask = 0
+	}
+	if bit7b {
+		Imm_B_7Mask = 0b1100000000000 | Imm_B_Mask
+	} else {
+		Imm_B_7Mask = Imm_B_Mask
+	}
+	if bit20j {
+		Imm_J_20_Mask = 0b1100000000000 | Imm_J_Mask
+	} else {
+		Imm_J_20_Mask = Imm_J_Mask
+	}
+
+	decoded := instruction{
+		opcode: uint32(instrAsInt & 0b1111111),
+		funct3: uint32((instrAsInt >> 12) & 0b111),
+		funct7: uint32((instrAsInt >> 25) & 0b1111111),
+		rd:     uint32((instrAsInt >> 7) & 0b11111),
+		rs1:    uint32((instrAsInt >> 15) & 0b11111),
+		rs2:    uint32((instrAsInt >> 20) & 0b11111),
+		Imm_I:  uint32(((instrAsInt >> 20) & 0b111111111111) | Imm_IS_Mask),
+		Imm_S:  uint32(((instrAsInt >> 20) & 0b11111100000) | ((instrAsInt >> 7) & 0b11111) | Imm_IS_Mask),
+		Imm_U:  uint32(instrAsInt&0b11111111111111111111000000000000) >> 12,
+		Imm_B:  uint32(((instrAsInt >> 20) & 0b11111100000) | ((instrAsInt >> 7) & 0b11110) | Imm_B_7Mask),
+		Imm_J:  uint32((instrAsInt >> 20 & 0b11111111110) | (instrAsInt & 0b11111111000000000000) | Imm_J_20_Mask),
+	}
+
+	return decoded
 }
 
-func rFormat(inst instruction, op func(int32, int32, int32)) {
+func bFormat(inst instruction, op func(uint32, uint32, uint32)) {
+	if Debug {
+		fmt.Printf("x%v x%v 0x%x\n", inst.rs1, inst.rs2, inst.Imm_B)
+	}
+	op(inst.rs1, inst.rs2, inst.Imm_B)
+}
+
+func rFormat(inst instruction, op func(uint32, uint32, uint32)) {
+	if Debug {
+		fmt.Printf("x%v x%v x%v\n", inst.rd, inst.rs1, inst.rs2)
+	}
 	op(inst.rd, inst.rs1, inst.rs2)
 }
 
-func iFormat(inst instruction, op func(int32, int32, int32)) {
-	op(inst.rd, inst.rs1, inst.imm12_I)
+func iFormat(inst instruction, op func(uint32, uint32, uint32)) {
+	if Debug {
+		fmt.Printf("x%v x%v 0x%x\n", inst.rd, inst.rs1, inst.Imm_I)
+	}
+	op(inst.rd, inst.rs1, inst.Imm_I)
 }
 
-func uFormat(inst instruction, op func(int32, int32)) {
-	op(inst.rd, inst.imm20)
+func uFormat(inst instruction, op func(uint32, uint32)) {
+	if Debug {
+		fmt.Printf("x%v 0x%x\n", inst.rd, inst.Imm_U)
+	}
+	op(inst.rd, inst.Imm_U)
 }
 
-func sFormat(inst instruction, op func(int32, int32, int32)) {
-	op(inst.rs1, inst.rs2, inst.imm12_SB)
+func jFormat(inst instruction, op func(uint32, uint32)) {
+	if Debug {
+		fmt.Printf("x%v 0x%v\n", inst.rd, inst.Imm_U)
+	}
+	op(inst.rd, inst.Imm_J)
+}
+
+func sFormat(inst instruction, op func(uint32, uint32, uint32)) {
+	if Debug {
+		fmt.Printf("x%v x%v 0x%x\n", inst.rs1, inst.rs2, inst.Imm_S)
+	}
+	op(inst.rs1, inst.rs2, inst.Imm_S)
 }

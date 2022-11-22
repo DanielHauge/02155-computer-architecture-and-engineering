@@ -16,7 +16,7 @@ type Comparable interface {
 
 func assert[T Comparable](actual T, expected T, t *testing.T) {
 	if expected != actual {
-		t.Log("Expected ", expected, " But got ", actual)
+		t.Logf("Expected %32b but was: %32b", expected, actual)
 		t.Fail()
 	}
 }

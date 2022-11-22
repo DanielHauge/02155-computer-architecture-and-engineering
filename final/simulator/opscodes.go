@@ -2,16 +2,15 @@ package simulator
 
 import (
 	"fmt"
-	"os"
 )
 
 var ECALL = false
 
-func wrap3(op func(int32, int32, int32), opFormatFunc func(instruction, func(int32, int32, int32))) func(instruction) {
+func wrap3(op func(uint32, uint32, uint32), opFormatFunc func(instruction, func(uint32, uint32, uint32))) func(instruction) {
 	return func(i instruction) { opFormatFunc(i, op) }
 }
 
-func wrap2(op func(int32, int32), opFormatFunc func(instruction, func(int32, int32))) func(instruction) {
+func wrap2(op func(uint32, uint32), opFormatFunc func(instruction, func(uint32, uint32))) func(instruction) {
 	return func(i instruction) { opFormatFunc(i, op) }
 }
 
@@ -21,13 +20,13 @@ func (instr *instruction) Execute() {
 }
 
 func print_debug(instruction string) {
-	if os.Getenv("debug") == "" {
-		fmt.Printf("Executing: %s\n", instruction)
+	if Debug {
+		fmt.Printf("%s ", instruction)
 	}
 }
 
 // https://github.com/michaeljclark/rv8/blob/master/doc/pdf/riscv-instructions.pdf
-func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
+func operation(opcode uint32, funct3 uint32, funct7 uint32) func(instruction) {
 	switch opcode {
 	case 0b0110111:
 		print_debug("lui")
@@ -37,7 +36,7 @@ func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
 		return wrap2(auip, uFormat)
 	case 0b1101111:
 		print_debug("jal")
-		return wrap2(jal, uFormat)
+		return wrap2(jal, jFormat)
 	case 0b1100111:
 		print_debug("jalr")
 		return wrap3(jalr, iFormat)
@@ -45,22 +44,22 @@ func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
 		switch funct3 {
 		case 0:
 			print_debug("beq")
-			return wrap3(beq, sFormat)
+			return wrap3(beq, bFormat)
 		case 1:
 			print_debug("bne")
-			return wrap3(bne, sFormat)
+			return wrap3(bne, bFormat)
 		case 4:
 			print_debug("blt")
-			return wrap3(blt, sFormat)
+			return wrap3(blt, bFormat)
 		case 5:
 			print_debug("bge")
-			return wrap3(bge, sFormat)
+			return wrap3(bge, bFormat)
 		case 6:
 			print_debug("bltu")
-			return wrap3(bltu, sFormat)
+			return wrap3(bltu, bFormat)
 		case 7:
 			print_debug("bgeu")
-			return wrap3(bgeu, sFormat)
+			return wrap3(bgeu, bFormat)
 		}
 	case 0b0000011:
 		switch funct3 {
@@ -112,12 +111,12 @@ func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
 		case 4:
 			print_debug("xori")
 			return wrap3(xori, iFormat)
-		case 5:
+		case 0b101:
 			switch funct7 {
 			case 0:
 				print_debug("srli")
 				return wrap3(srli, iFormat)
-			case 0x8:
+			case 0b0100000:
 				print_debug("srai")
 				return wrap3(srai, iFormat)
 			}
@@ -135,7 +134,7 @@ func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
 			case 0:
 				print_debug("add")
 				return wrap3(add, rFormat)
-			case 0x8:
+			case 0b0100000:
 				print_debug("sub")
 				return wrap3(sub, rFormat)
 			}
@@ -156,7 +155,7 @@ func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
 			case 0:
 				print_debug("srl")
 				return wrap3(srl, rFormat)
-			case 0x8:
+			case 0b0100000:
 				print_debug("sra")
 				return wrap3(sra, rFormat)
 			}
@@ -168,10 +167,13 @@ func operation(opcode int32, funct3 int32, funct7 int32) func(instruction) {
 			return wrap3(and, rFormat)
 		}
 	case 0b1110011: //
-		return func(i instruction) { ECALL = true }
+		return func(i instruction) {
+			print_debug("ECALL")
+			ECALL = true
+		}
 	}
 
 	return func(i instruction) {
-		fmt.Printf("Could not find operation? opcode: %v\n", i.opcode)
+		fmt.Printf("Could not find operation? opcode: %07b | funct3: %03b | funct7: %07b\n", i.opcode, i.funct3, i.funct7)
 	}
 }

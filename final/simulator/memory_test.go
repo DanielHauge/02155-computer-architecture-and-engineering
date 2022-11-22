@@ -29,42 +29,8 @@ func Test_lw(t *testing.T) {
 	Mem[33] = byte(1)
 	Reg[5] = 26
 	lw(1, 5, 0)
-	assert(Reg[1], -1, t)
+	assert(Reg[1], castToUint2(-1), t)
 	lw(1, 5, 4)
-	assert(Reg[1], 1, t)
-}
-
-func Test_lh(t *testing.T) {
-	Mem[26] = byte(255)
-	Mem[27] = byte(255)
-	Mem[28] = byte(255)
-	Mem[29] = byte(255)
-	Mem[30] = byte(0)
-	Mem[31] = byte(0)
-	Mem[32] = byte(0)
-	Mem[33] = byte(1)
-	Reg[5] = 26
-	lh(1, 5, 3)
-	assert(Reg[1], 65280, t)
-	lh(1, 5, 6)
-	assert(Reg[1], 1, t)
-}
-
-func Test_lb(t *testing.T) {
-	Mem[26] = byte(255)
-	Mem[27] = byte(255)
-	Mem[28] = byte(255)
-	Mem[29] = byte(255)
-	Mem[30] = byte(0)
-	Mem[31] = byte(0)
-	Mem[32] = byte(0)
-	Mem[33] = byte(1)
-	Reg[5] = 26
-	lb(1, 5, 3)
-	assert(Reg[1], 255, t)
-	lb(1, 5, 6)
-	assert(Reg[1], 0, t)
-	lb(1, 5, 7)
 	assert(Reg[1], 1, t)
 }
 
@@ -75,7 +41,7 @@ func Test_lwu(t *testing.T) {
 	Mem[29] = byte(255)
 	Reg[5] = 26
 	lwu(1, 5, 0)
-	assert(Reg[1], -1, t)
+	assert(Reg[1], castToUint2(-1), t)
 }
 
 func Test_lhu(t *testing.T) {
@@ -83,7 +49,7 @@ func Test_lhu(t *testing.T) {
 	Mem[27] = byte(255)
 	Reg[5] = 26
 	lwu(1, 5, 0)
-	assert(Reg[1], -1, t)
+	assert(Reg[1], castToUint2(-1), t)
 }
 
 func Test_lbu(t *testing.T) {
@@ -94,7 +60,7 @@ func Test_lbu(t *testing.T) {
 }
 
 func Test_sw(t *testing.T) {
-	Reg[5] = -1
+	Reg[5] = castToUint2(-1)
 	Reg[6] = 62
 	sw(6, 5, 2)
 	assert(Mem[63], byte(0), t)
@@ -106,7 +72,7 @@ func Test_sw(t *testing.T) {
 }
 
 func Test_sh(t *testing.T) {
-	Reg[5] = -1
+	Reg[5] = castToUint2(-1)
 	Reg[6] = 82
 	sh(6, 5, 2)
 	assert(Mem[83], byte(0), t)
@@ -116,7 +82,7 @@ func Test_sh(t *testing.T) {
 }
 
 func Test_sb(t *testing.T) {
-	Reg[5] = -1
+	Reg[5] = castToUint2(-1)
 	Reg[6] = 22
 	sb(6, 5, 2)
 	assert(Mem[23], byte(0), t)

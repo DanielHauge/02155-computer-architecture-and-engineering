@@ -39,8 +39,8 @@ func Test_castToBytesLength(t *testing.T) {
 
 func Test_castToBytes(t *testing.T) {
 	bs := castToBytes(13)
-	assertAll(bs[0:2], byte(0), t)
-	assert(bs[3], byte(13), t)
+	assertAll(bs[2:3], byte(0), t)
+	assert(bs[0], byte(13), t)
 }
 
 func Test_castToUint(t *testing.T) {

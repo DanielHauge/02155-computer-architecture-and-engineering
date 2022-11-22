@@ -13,7 +13,6 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Printf("Simulating program from binaries in: %s\n", os.Args[1])
-	debugMode := os.Getenv("debug") == ""
 
 	binary, err := os.ReadFile(os.Args[1])
 	if err != nil {
@@ -23,19 +22,13 @@ func main() {
 	zeros := make([]byte, 100000-programLength)
 	mem := append(binary, zeros...)
 	s.Initialize(mem)
-	if debugMode {
-		s.Print_memory(len(binary))
-		fmt.Println()
-	}
+	s.Debug = true
 
 	for s.Pc < programLength && !s.ECALL {
 		instrBs := s.Mem[s.Pc : s.Pc+4] // Fetch instructions from memory
-		if debugMode {
-			fmt.Printf("Executing: %v \n", instrBs)
-		}
-		inst := s.Decode(instrBs) // Decode instruction from binary
-		inst.Execute()            // Execute operation from instruction
-		s.Pc += 4                 // Increment program counter
+		inst := s.Decode(instrBs)       // Decode instruction from binary
+		inst.Execute()                  // Execute operation from instruction
+		s.Pc += 4                       // Increment program counter
 	}
 	s.Print_registers()
 	if len(os.Args) > 2 {

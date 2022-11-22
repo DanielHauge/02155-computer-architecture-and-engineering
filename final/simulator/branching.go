@@ -1,47 +1,47 @@
 package simulator
 
-func beq(rs1 int32, rs2 int32, imm12 int32) {
-	if Reg[rs1] == Reg[rs2] {
-		Pc += imm12
+func beq(rs1 uint32, rs2 uint32, imm12 uint32) {
+	if castToInt(&Reg[rs1]) == castToInt(&Reg[rs2]) {
+		Pc += castToInt(&imm12) - 4 // -4 to only mark those operations that should not increment PC by 4 by default.
 	}
 }
 
-func bne(rs1 int32, rs2 int32, imm12 int32) {
-	if Reg[rs1] != Reg[rs2] {
-		Pc += imm12
+func bne(rs1 uint32, rs2 uint32, imm12 uint32) {
+	if castToInt(&Reg[rs1]) != castToInt(&Reg[rs2]) {
+		Pc += castToInt(&imm12) - 4 // -4 to only mark those operations that should not increment PC by 4 by default.
 	}
 }
 
-func bge(rs1 int32, rs2 int32, imm12 int32) {
+func bge(rs1 uint32, rs2 uint32, imm12 uint32) {
+	if castToInt(&Reg[rs1]) >= castToInt(&Reg[rs2]) {
+		Pc += castToInt(&imm12) - 4 // -4 to only mark those operations that should not increment PC by 4 by default.
+	}
+}
+
+func bgeu(rs1 uint32, rs2 uint32, imm12 uint32) {
 	if Reg[rs1] >= Reg[rs2] {
-		Pc += imm12
+		Pc += int32(imm12) - 4 // -4 to only mark those operations that should not increment PC by 4 by default.
 	}
 }
 
-func bgeu(rs1 int32, rs2 int32, imm12 int32) {
-	if castToUint(&Reg[rs1]) >= castToUint(&Reg[rs2]) {
-		Pc += imm12
+func blt(rs1 uint32, rs2 uint32, imm12 uint32) {
+	if castToInt(&Reg[rs1]) < castToInt(&Reg[rs2]) {
+		Pc += castToInt(&imm12) - 4 // -4 to only mark those operations that should not increment PC by 4 by default.
 	}
 }
 
-func blt(rs1 int32, rs2 int32, imm12 int32) {
+func bltu(rs1 uint32, rs2 uint32, imm12 uint32) {
 	if Reg[rs1] < Reg[rs2] {
-		Pc += imm12
+		Pc += int32(imm12) - 4 // -4 to only mark those operations that should not increment PC by 4 by default.
 	}
 }
 
-func bltu(rs1 int32, rs2 int32, imm12 int32) {
-	if castToUint(&Reg[rs1]) < castToUint(&Reg[rs2]) {
-		Pc += imm12
-	}
+func jal(rd uint32, imm20 uint32) {
+	Reg[rd] = uint32(Pc + 4)
+	Pc = Pc + int32(imm20)
 }
 
-func jal(rd int32, imm20 int32) {
-	Reg[rd] = Pc + 4
-	Pc = Pc + imm20
-}
-
-func jalr(rd int32, rs1 int32, imm12 int32) {
-	Reg[rd] = Pc + 4
-	Pc = Reg[rs1] + imm12
+func jalr(rd uint32, rs1 uint32, imm12 uint32) {
+	Reg[rd] = uint32(Pc + 4)
+	Pc = castToInt(&Reg[rs1]) + castToInt(&imm12)
 }
