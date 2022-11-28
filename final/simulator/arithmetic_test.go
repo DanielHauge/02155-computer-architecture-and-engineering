@@ -54,7 +54,7 @@ func Test_lui(t *testing.T) {
 }
 
 func Test_auip(t *testing.T) {
-	Pc = 12
-	auip(1, 52)
-	assert(Reg[1], 0x40000, t)
+	Pc = 0
+	auip(10, 0x10000)
+	assert(Reg[10], 0x10000000, t)
 }

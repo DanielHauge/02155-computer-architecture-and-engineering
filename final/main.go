@@ -24,13 +24,15 @@ func main() {
 	s.Initialize(mem)
 	s.Debug = true
 
+	defer s.Print_registers()
+
 	for s.Pc < programLength && !s.ECALL {
 		instrBs := s.Mem[s.Pc : s.Pc+4] // Fetch instructions from memory
 		inst := s.Decode(instrBs)       // Decode instruction from binary
 		inst.Execute()                  // Execute operation from instruction
 		s.Pc += 4                       // Increment program counter
 	}
-	s.Print_registers()
+
 	if len(os.Args) > 2 {
 		s.Dump_registers_to_file(os.Args[2])
 	}

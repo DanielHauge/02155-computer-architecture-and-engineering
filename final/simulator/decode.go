@@ -88,12 +88,24 @@ func rFormat(inst instruction, op func(uint32, uint32, uint32)) {
 	if Debug {
 		fmt.Printf("x%v x%v x%v\n", inst.rd, inst.rs1, inst.rs2)
 	}
+	if inst.rd == 0 {
+		if Debug {
+			fmt.Printf("Hov! Assigning x0 -> will ignore\n")
+		}
+		return
+	}
 	op(inst.rd, inst.rs1, inst.rs2)
 }
 
 func iFormat(inst instruction, op func(uint32, uint32, uint32)) {
 	if Debug {
 		fmt.Printf("x%v x%v 0x%x\n", inst.rd, inst.rs1, inst.Imm_I)
+	}
+	if inst.rd == 0 {
+		if Debug {
+			fmt.Printf("Hov! Assigning x0 -> will ignore\n")
+		}
+		return
 	}
 	op(inst.rd, inst.rs1, inst.Imm_I)
 }
@@ -102,12 +114,24 @@ func uFormat(inst instruction, op func(uint32, uint32)) {
 	if Debug {
 		fmt.Printf("x%v 0x%x\n", inst.rd, inst.Imm_U)
 	}
+	if inst.rd == 0 {
+		if Debug {
+			fmt.Printf("Hov! Assigning x0 -> will ignore\n")
+		}
+		return
+	}
 	op(inst.rd, inst.Imm_U)
 }
 
 func jFormat(inst instruction, op func(uint32, uint32)) {
 	if Debug {
 		fmt.Printf("x%v 0x%v\n", inst.rd, inst.Imm_U)
+	}
+	if inst.rd == 0 {
+		if Debug {
+			fmt.Printf("Hov! Assigning x0 -> will ignore\n")
+		}
+		return
 	}
 	op(inst.rd, inst.Imm_J)
 }
