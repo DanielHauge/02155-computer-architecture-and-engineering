@@ -1,3 +1,53 @@
 \section*{Introduction}
 
-- Short, what is this assignment about etc.
+This report covers the final assignment of course 02155 Computer Architecture and Engineering.
+The objective of the assignment is to simulate the base RS32I instruction set of a RISC-V processor.
+The following instructions is ignored however:
+\begin{itemize}
+    \item fence
+    \item fence.i
+    \item ebreak
+    \item csrrw
+    \item csrrs
+    \item csrrc
+    \item csrrwi
+    \item csrrsi
+    \item csrrci
+\end{itemize}
+
+The simulator is able to ingest a binary file, that is compiled with RISC-V RS32I as target instruction set.
+The ingested binary file is executed and as a result, print a correct register state (according to the program binaries).
+
+Additionally, an output path can be specified to write the register values to little endian encoded binaries, starting from x0 to x31.
+
+The simulator can be run on ubuntu with the following instructions:
+
+\begin{figure}[H]
+    \centering{\caption{Install golang (\href{https://go.dev/dl/go1.19.3.windows-amd64.msi}{windows installer})}
+        \begin{minted}[linenos,frame=single]{bash}
+curl -O $HOME/go.tar.gz -L https://go.dev/dl/go1.19.3.linux-amd64.tar.gz 
+rm -rf $HOME/go && tar -C $HOME -xzf go.tar.gz
+export PATH=$PATH:$HOME/go/bin
+go version
+        \end{minted}
+    }
+\end{figure}
+If succesfull, go version should print something like "go version go1.19.3 linux/amd64".
+The simulator can then be used in the following 2 ways, given current directory is in source code root:
+
+\begin{figure}[H]
+    \centering{\caption{Run (Build \& run)}
+        \begin{minted}[linenos,frame=single]{bash}
+go run . ./tests/binary/t1.bin ./register_dump.bin
+        \end{minted}
+    }
+\end{figure}
+
+\begin{figure}[H]
+    \centering{\caption{Build executable}
+        \begin{minted}[linenos,frame=single]{bash}
+go build -o executable
+./executable ./tests/binary/t1.bin ./register_dump.bin
+        \end{minted}
+    }
+\end{figure}

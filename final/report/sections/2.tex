@@ -1,9 +1,38 @@
 \section*{Design}
+The design of the simulator was made with 3 main objectives.
+\begin{itemize}
+    \item Extensibility
+    \item Simplicity
+    \item Testability
+\end{itemize}
 
-- How is the simulator designed?
 
-registers, memory ect as just arrays of uints.
-Use uints whenever possible.
-Seperation of operations (logical, branching, etc)
-    For readability and Testing
-Extensibility.
+\subsection*{Extensibility}
+Although it was not planned to extend the simulator unless provided an abundance of time.
+Having some degree of maintainability and extensibility is relevant for this project, as with more time, the simulator would be extended with more instruction sets.
+To facilitate this design, code is split by their domains, like for example: 
+Branch operations, Logical operations, Arithmetic operations, Memory operations, Decoding, Opscodes mapping, Binary handling, Tests, etc...
+
+\subsection*{Simplicity}
+With a limited timeframe comes a limited scope. To combat potential scope creep, simplicity is choosen any time over cool or fancy stuff.
+There is a risk of not getting the minimal viable solution ready before deadline, if cool and fancy alleyways are visited first time around.
+It could be cool to boot linux, extend with all extensions (RS64I, RS32M, ...) or staged pipeline.
+But for this simulator, the simplest approach is taken until a more advanced approach is absolutely neccesary.
+
+\subsection*{Testability}
+In an attempt to increase development speed and correctness, the simulator was designed with high testability in mind.
+Initialy tests were concieved such that a full instruction in the form of an integer is given, executed with assertions on the side effects.
+Although pretty granular, it was still testing too much at once with both the operation and the encoding.
+Another drawback of the initial approach, is that specifying integers as instructions for test cases is not very readable, and require intimate knowledge of the system.
+
+To enable simpler tests of operations, simpler function declarations would be needed, like for example: $$add(rd, rs1, rs2)$$
+This way, a very readable and simple test could be constructed like the following:
+$$ a_1 \leftarrow 5 $$
+$$ a_2 \leftarrow 3 $$
+$$ add(a_0, a_1, a_2) $$
+$$ \textbf{assert } a_0 = 8 $$
+
+Decoupling decoding and operations, will make the simulator more testable, and as bonus result also make the code more readable.
+This pattern is extended to all parts of the simulator, such that functions are limited to a singular responsibility which makes them easier to read, determine behavior, code and test.
+
+
