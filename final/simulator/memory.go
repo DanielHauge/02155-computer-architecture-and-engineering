@@ -15,7 +15,6 @@ func Initialize(mem []byte) {
 	Pc = 0
 	Mem = mem
 	Reg = make([]uint32, 32)
-	Reg[2] = uint32(len(mem))
 }
 
 func Print_registers() {

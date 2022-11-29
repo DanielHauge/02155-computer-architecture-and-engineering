@@ -30,6 +30,13 @@ func Test_Decode_U(t *testing.T) {
 	assert(decoded.Imm_U, 0x12345, t)
 }
 
+func Test_Decode_J(t *testing.T) {
+	var instr uint32 = 0b0_0000101110_0_00000000_000011101111
+	bs := castUToBytes(instr)
+	decoded := Decode(bs)
+	assert(decoded.Imm_J, 92, t)
+}
+
 func Test_R(t *testing.T) {
 	testFunc := func(a uint32, b uint32, c uint32) {
 		assert(a, 25, t)

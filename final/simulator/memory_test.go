@@ -15,7 +15,7 @@ func Test_Initialize(t *testing.T) {
 	assert(Mem[5], byte(255), t)
 	assert(Mem[255], byte(255), t)
 	assert(Pc, 0, t)
-	assert(Reg[2], 1000, t)
+	assert(Reg[2], 0, t)
 }
 
 func Test_lw(t *testing.T) {

@@ -36,14 +36,13 @@ func Decode(instr_original []byte) instruction {
 
 	signed := ((instrAsInt >> 31) & 0b1) == 1
 	bit7b := ((instrAsInt >> 7) & 0b1) == 1
-	bit20j := ((instrAsInt >> 19) & 0b1) == 1
 	var (
-		Imm_IS_Mask, Imm_B_Mask, Imm_B_7Mask, Imm_J_Mask, Imm_J_20_Mask uint32
+		Imm_IS_Mask, Imm_B_Mask, Imm_B_7Mask, Imm_J_Mask uint32
 	)
 	if signed {
 		Imm_IS_Mask = 0b11111111111111111111100000000000
 		Imm_B_Mask = 0b11111111111111111110000000000000
-		Imm_J_Mask = 0b11111111111000000000000000000000
+		Imm_J_Mask = 0b11111111111100000000000000000000
 	} else {
 		Imm_IS_Mask = 0
 		Imm_B_Mask = 0
@@ -54,11 +53,14 @@ func Decode(instr_original []byte) instruction {
 	} else {
 		Imm_B_7Mask = Imm_B_Mask
 	}
-	if bit20j {
-		Imm_J_20_Mask = 0b1100000000000 | Imm_J_Mask
-	} else {
-		Imm_J_20_Mask = Imm_J_Mask
-	}
+
+	Imm_J := instrAsInt & 0b11111111111111111111000000000000
+	Imm_J_12_19 := Imm_J & 0b11111111000000000000
+	Imm_J_31 := (Imm_J & 0b100000000000000000000) >> 9
+	Imm_21_30 := (Imm_J & 0b1111111111000000000000000000000) >> 20
+	Imm_J_20 := (Imm_J & 0b100000000000000000000) >> 9
+
+	Imm_J_final := Imm_J_12_19 | Imm_J_31 | Imm_21_30 | Imm_J_20 | Imm_J_Mask
 
 	decoded := instruction{
 		opcode: uint32(instrAsInt & 0b1111111),
@@ -71,7 +73,7 @@ func Decode(instr_original []byte) instruction {
 		Imm_S:  uint32(((instrAsInt >> 20) & 0b11111100000) | ((instrAsInt >> 7) & 0b11111) | Imm_IS_Mask),
 		Imm_U:  uint32(instrAsInt&0b11111111111111111111000000000000) >> 12,
 		Imm_B:  uint32(((instrAsInt >> 20) & 0b11111100000) | ((instrAsInt >> 7) & 0b11110) | Imm_B_7Mask),
-		Imm_J:  uint32((instrAsInt >> 20 & 0b11111111110) | (instrAsInt & 0b11111111000000000000) | Imm_J_20_Mask),
+		Imm_J:  Imm_J_final,
 	}
 
 	return decoded
@@ -125,7 +127,7 @@ func uFormat(inst instruction, op func(uint32, uint32)) {
 
 func jFormat(inst instruction, op func(uint32, uint32)) {
 	if Debug {
-		fmt.Printf("x%v 0x%v\n", inst.rd, inst.Imm_U)
+		fmt.Printf("x%v 0x%v\n", inst.rd, inst.Imm_J)
 	}
 	if inst.rd == 0 {
 		if Debug {
