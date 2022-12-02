@@ -1,9 +1,46 @@
-\section*{Discussion}
+\section{Discussion}
 
-- Testing was nice, but i feel into some bad habits of just debugging w/o constructing additional tests.
-- Testing would have been better to define tests based on exact knowledge of how RISC-V works instead of guessing from cheatsheet.
-- The structure was nice, and provided a good overview of the code etc.
-- The seperation would have made extensions easier to implement once the foundation was built.
-- Using uint32 made most operations trivial and predictable.
-- Using arrays made memory implementations very simple and trivial.
-- Although a more advanced virtual memory setup could be cool.
+Having made the simulator as a package, extensions for other instruction sets seem not too difficult to integrate.
+Furthermore, using global arrays simplified the memory management and handling of registers. 
+
+Designing for testability was quite comfortable. 
+Whenever some defect or unwanted behavior was detected, a test was not difficult to write. 
+Having unit tests also made identifying root causes of issues found easier.
+
+In the demo, the purpose of some of the assignment material was clarified. 
+The files ending with ".res" is a binary dump of the expected values of the registers.
+With the simulators functionality to do a binary dump too, automated End-to-end tests could have been made like the following:
+With all the ".res" files in an \textbf{expected} directory located in the source root. 
+Then a script could be doing the following:
+Foreach binary program provided, run the simulator and dump registers to an \textbf{actual} directory.
+Then use a compare tool like one of the gnu diffutils: \textit{cmp} or \textit{diff}, for example:
+\begin{figure}[H]
+\begin{minted}[linenos]{bash}
+$ ls tests/binary/ | sed 's/....$//' | xargs -I {} go run . tests/binary/{}.bin actual/{}.res
+$ ls expected/ | xargs -I {} diff -s ./actual/{} ./expected/{}
+Files ./actual/addlarge.res and ./expected/addlarge.res are identical
+Files ./actual/addneg.res and ./expected/addneg.res are identical
+Files ./actual/addpos.res and ./expected/addpos.res are identical
+Files ./actual/bool.res and ./expected/bool.res are identical
+Files ./actual/shift.res and ./expected/shift.res are identical
+Files ./actual/shift2.res and ./expected/shift2.res are identical
+..........
+\end{minted}
+\end{figure}
+
+From the \textit{diff} man page: 
+\begin{quote}
+    Exit status is 0 if inputs are the same, 1 if different, 2 if trouble.
+\end{quote}
+
+Then assert all exit codes of \textit{diff} or \textit{cmp} is 0, or manually add -s flag to diff and observe output like above.
+
+This clarification could have been very helpfull if known earlier in the development and testing of the simulator. 
+This approach to testing could have been pretty good to ensure correct behavior from an end-to-end perspective.
+
+From hindsight, designing for testability is nice, but writing unit tests just to apporach $100\%$ test coverage, is probably not neccesary or super usefull.
+Another approach could be to design with testability in mind, but only write crucial unit tests up front, and defer unit tests for when defect are found.
+Having end-to-end tests that test the system as a whole and most common use cases, helps alot to determine correct behavior as a whole.
+And when an end-to-end test fails to pass, unit tests could then be written to help remedy the incorrect behavior (ie. until end-to-end test pass).
+
+\newpage

@@ -1,15 +1,12 @@
 	.file	"recursive.c"
-	.option nopic
-	.attribute arch, "rv32i2p0"
-	.attribute unaligned_access, 0
-	.attribute stack_align, 16
+	.option pic
 	.text
- #APP
+#APP
 	li sp, 0x100000
 	jal main
 	li a7, 10
 	ecall
- #NO_APP
+#NO_APP
 	.align	2
 	.globl	recursive
 	.type	recursive, @function
@@ -20,7 +17,7 @@ recursive:
 	addi	s0,sp,32
 	sw	a0,-20(s0)
 	lw	a5,-20(s0)
-	bgt	a5,zero,.L2
+	bgtz	a5,.L2
 	li	a5,1
 	j	.L3
 .L2:
@@ -54,4 +51,5 @@ main:
 	addi	sp,sp,16
 	jr	ra
 	.size	main, .-main
-	.ident	"GCC: (SiFive GCC 10.1.0-2020.08.2) 10.1.0"
+	.ident	"GCC: (Ubuntu 9.4.0-1ubuntu1~20.04) 9.4.0"
+	.section	.note.GNU-stack,"",@progbits

@@ -1,6 +1,8 @@
 package simulator
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"os"
 )
@@ -25,12 +27,11 @@ func Print_registers() {
 }
 
 func Dump_registers_to_file(path string) {
-	bs := make([]byte, 4*32)
+	bs := new(bytes.Buffer)
 	for _, i := range Reg {
-		b := castUToBytes(i)
-		bs = append(bs, b...)
+		binary.Write(bs, binary.LittleEndian, uint32(i))
 	}
-	os.WriteFile(path, bs, 0644)
+	os.WriteFile(path, bs.Bytes(), 0644)
 }
 
 func Print_memory(n int) {
